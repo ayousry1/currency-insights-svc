@@ -39,11 +39,6 @@ public class CurrencyController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/api/health")
-    public ResponseEntity<?> health() {
-        return ResponseEntity.ok("OK");
-    }
-
     private Map<String, Double> fetchRates(String base) {
         try {
             String url = EXCHANGE_API + base;
