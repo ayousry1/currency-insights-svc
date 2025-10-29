@@ -46,4 +46,18 @@ public class CurrencyController {
             }
         }
     }
+
+    @GetMapping("/api/rates/export/{base}")
+    public ResponseEntity<byte[]> exportRates(@PathVariable String base) {
+        Map<String, Double> rates = fetchRates(base);
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Double> entry : rates.entrySet()) {
+            sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+        byte[] fileContent = sb.toString().getBytes();
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=" + base + "_rates.txt")
+                .header("Content-Type", "text/plain")
+                .body(fileContent);
+    }
 }
