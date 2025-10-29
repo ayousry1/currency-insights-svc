@@ -14,8 +14,6 @@ import java.util.Map;
 //todo: add export example
 //todo: remove resttemplate and add feign client
 //todo: hardcode the export format
-//todo: remove the swagger
-//todo:
 
 @RestController
 public class CurrencyController {
