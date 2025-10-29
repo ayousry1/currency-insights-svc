@@ -26,7 +26,6 @@ public class CurrencyController {
 
     @GetMapping("/api/rates/supported")
     public ResponseEntity<?> supported() {
-        System.out.println("inside !!");
         return ResponseEntity.ok(SUPPORTED);
     }
 
