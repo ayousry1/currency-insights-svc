@@ -32,13 +32,6 @@ public class CurrencyController {
         return ResponseEntity.ok(rates);
     }
 
-    @GetMapping("/api/rates/insights/{base}")
-    public ResponseEntity<?> insights(@PathVariable String base) {
-        Map<String, Double> rates = fetchRates(base);
-        Map<String, Object> result = calculateInsights(rates);
-        return ResponseEntity.ok(result);
-    }
-
     private Map<String, Double> fetchRates(String base) {
         try {
             String url = EXCHANGE_API + base;
@@ -55,37 +48,5 @@ public class CurrencyController {
                 return new HashMap<>();
             }
         }
-    }
-
-    private Map<String, Object> calculateInsights(Map<String, Double> rates) {
-        List<Map.Entry<String, Double>> sorted = new ArrayList<>(rates.entrySet());
-        sorted.sort(Map.Entry.comparingByValue());
-        List<String> strongest = new ArrayList<>();
-        List<String> weakest = new ArrayList<>();
-        for (int i = 0; i < sorted.size(); i++) {
-            if (i < 3) strongest.add(sorted.get(i).getKey());
-            if (i >= sorted.size() - 3) weakest.add(sorted.get(i).getKey());
-        }
-        double avg = 0;
-        for (double v : rates.values()) avg += v;
-        avg = rates.size() == 0 ? 0 : avg / rates.size();
-        double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-        for (double v : rates.values()) {
-            if (v < min) min = v;
-            if (v > max) max = v;
-        }
-        double vi = avg == 0 ? 0 : (max - min) / avg;
-        double css = 100 - (vi * 100);
-        if (css < 0) css = 0;
-        if (css > 100) css = 100;
-        String rec = css > 85 ? "Very stable currency base." : css >= 60 ? "Moderately stable base currency." : "Volatile base currency, exercise caution.";
-        Map<String, Object> result = new HashMap<>();
-        result.put("strongest", strongest);
-        result.put("weakest", weakest);
-        result.put("avgRate", avg);
-        result.put("volatilityIndex", vi);
-        result.put("currencyStabilityScore", css);
-        result.put("recommendation", rec);
-        return result;
     }
 }
