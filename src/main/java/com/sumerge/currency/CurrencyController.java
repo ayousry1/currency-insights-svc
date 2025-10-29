@@ -95,15 +95,15 @@ public class CurrencyController {
     @GetMapping("/api/rates/supported")
     public ResponseEntity<?> supported(@RequestHeader("Authorization") String token) {
         System.out.println("inside !!");
-        if (isTokenExpired(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Expired token");
-        if (!checkRateLimit(token)) return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit");
+        if (isTokenExpired(token)) throw new AuthenticationException();
+        if (!checkRateLimit(token)) throw new RateLimitExceededException();
         return ResponseEntity.ok(SUPPORTED);
     }
 
     @GetMapping("/api/rates/latest/{base}")
     public ResponseEntity<?> latest(@RequestHeader("Authorization") String token, @PathVariable String base) {
-        if (isTokenExpired(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Expired token");
-        if (!checkRateLimit(token)) return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit");
+        if (isTokenExpired(token)) throw new AuthenticationException();
+        if (!checkRateLimit(token)) throw new RateLimitExceededException();
         if (cache.containsKey(base)) return ResponseEntity.ok(cache.get(base));
         Map<String, Double> rates = fetchRates(base);
         cache.put(base, rates);
@@ -112,8 +112,8 @@ public class CurrencyController {
 
     @GetMapping("/api/rates/insights/{base}")
     public ResponseEntity<?> insights(@RequestHeader("Authorization") String token, @PathVariable String base) {
-        if (isTokenExpired(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Expired token");
-        if (!checkRateLimit(token)) return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Rate limit");
+        if (isTokenExpired(token)) throw new AuthenticationException();
+        if (!checkRateLimit(token)) throw new RateLimitExceededException();
         Map<String, Double> rates = cache.getOrDefault(base, fetchRates(base));
         cache.put(base, rates);
         Map<String, Object> result = calculateInsights(rates);
@@ -127,7 +127,7 @@ public class CurrencyController {
 
     @PostMapping("/api/admin/refresh")
     public ResponseEntity<?> refreshCache(@RequestHeader("Authorization") String token) {
-        if (!isAdmin(token)) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not admin");
+        if (!isAdmin(token)) throw new AuthorizationException();
         cache.clear();
         return ResponseEntity.ok("Cache refreshed");
     }
@@ -182,4 +182,3 @@ public class CurrencyController {
         return result;
     }
 }
-
