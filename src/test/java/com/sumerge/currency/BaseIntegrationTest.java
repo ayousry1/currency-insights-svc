@@ -29,6 +29,15 @@ public class BaseIntegrationTest {
         // Cleanup logic after all tests
     }
 
+    //todo: add unit tests to the calculations
+
+    //todo: add unit tests for the export
+
+    //todo: test the rate limit exception
+
+    //todo: test the timeout exception
+
+    //todo: test the malformed underlying api output exception
     @Test
     void basicHealthIntegrationTest() {
         String healthUrl = "/api/health";
