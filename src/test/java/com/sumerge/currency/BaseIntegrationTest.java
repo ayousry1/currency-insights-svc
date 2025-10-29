@@ -26,14 +26,22 @@ public class BaseIntegrationTest {
         // Cleanup logic after all tests
     }
 
-    //todo: add unit tests to the calculations
+    void givenUserWhenExceedingRateLimitThenReturn429() {
+    }
 
-    //todo: add unit tests for the export
+    void givenUnderlyingApiTimeoutThenReturnFromCache() {
+    }
 
-    //todo: test the rate limit exception
+    void givenUnderlyingApiTimeoutAndNoCachePresentThenReturnError() {
+    }
 
-    //todo: test the timeout exception
+    void givenUnderlyingApiReturnsMalformedJsonThenReturnError() {
+    }
 
-    //todo: test the malformed underlying api output exception
+    void givenValidBaseWhenExportingRatesThenReturnTextFile() {
+    }
+
+    void givenValidBaseWhenCalculatingInsightsThenReturnCorrectCalculation() {
+    }
 
 }
